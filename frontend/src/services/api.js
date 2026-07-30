@@ -58,7 +58,10 @@ export const extractErrorMessage = (err) => {
     if (typeof detail === "string" && detail) return detail;
     return `The server returned an error (${status}). Try again in a moment.`;
   }
-  return "The server isn't responding. Check that it's running on port 8000, then try again.";
+  const isProd = Boolean(import.meta.env.VITE_API_URL);
+  return isProd
+    ? "The fact-check service is offline or still starting up. Please try again in a moment."
+    : "The server isn't responding. Check that it's running on port 8000, then try again.";
 };
 
 export default api;
