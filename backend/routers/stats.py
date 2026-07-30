@@ -15,18 +15,37 @@ router = APIRouter(prefix="/api", tags=["stats"])
 _DEFINITIVE = {"TRUE", "FALSE", "MISLEADING"}
 
 
+# Hardcoded from consolidation_report.txt — used as fallback on Render where
+# claims_clean.csv is gitignored and not present.
+_HARDCODED_STATS = {
+    "claims_indexed_locally": 259648,
+    "verdict_distribution": {
+        "TRUE": 125491,
+        "FALSE": 82338,
+        "MISLEADING": 16400,
+        "UNVERIFIED": 35419,
+    },
+    "category_distribution": {
+        "Other": 208598,
+        "Technology": 20735,
+        "Politics": 14165,
+        "Health": 10786,
+        "Economy": 4849,
+        "Science": 515,
+    },
+    "accuracy_rate": 86.3,
+}
+
+
 @lru_cache(maxsize=1)
 def _compute_local_stats() -> dict:
     """Load verdict/category columns from the local CSV once and cache the aggregates."""
     path = settings.processed_csv
     if not path.exists():
-        logger.warning("claims_clean.csv not found at %s; returning empty stats.", path)
-        return {
-            "claims_indexed_locally": 0,
-            "verdict_distribution": {},
-            "category_distribution": {},
-            "accuracy_rate": 0.0,
-        }
+        logger.info(
+            "claims_clean.csv not found at %s; using hardcoded dataset stats.", path
+        )
+        return _HARDCODED_STATS
 
     import pandas as pd
 

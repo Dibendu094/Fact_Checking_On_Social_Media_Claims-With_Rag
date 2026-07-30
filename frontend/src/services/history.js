@@ -31,6 +31,7 @@ const fromRow = (row) => ({
 
 /** Fetch the signed-in user's checks, newest first. */
 export async function listChecks() {
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from(TABLE)
     .select("*")
@@ -45,6 +46,7 @@ export async function listChecks() {
  * `user_id` must be set explicitly so the RLS insert policy passes.
  */
 export async function saveCheck(userId, claim, result) {
+  if (!supabase) return null;
   const payload = {
     user_id: userId,
     claim,
@@ -72,6 +74,7 @@ export async function saveCheck(userId, claim, result) {
  * accurate across devices — whichever device saved a check, this query sees it.
  */
 export async function countTodayChecks() {
+  if (!supabase) return 0;
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
   const { count, error } = await supabase
@@ -84,6 +87,7 @@ export async function countTodayChecks() {
 
 /** Delete one entry. RLS ensures this only ever affects the caller's own row. */
 export async function deleteCheck(id) {
+  if (!supabase) return true;
   const { error } = await supabase.from(TABLE).delete().eq("id", id);
   if (error) throw error;
   return true;

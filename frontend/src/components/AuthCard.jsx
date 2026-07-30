@@ -41,7 +41,7 @@ function PwRules({ checks }) {
  * password) — no email link or current password needed.
  */
 export default function AuthCard({ mode, setMode, suppressRedirectRef, onSignedIn }) {
-  const { signUp, signIn, resetPassword } = useAuth();
+  const { signUp, signIn, resetPassword, supabaseConfigured } = useAuth();
 
   const [notice, setNotice] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -156,6 +156,18 @@ export default function AuthCard({ mode, setMode, suppressRedirectRef, onSignedI
           {mode === "signin" && "Sign in to continue"}
           {mode === "forgot" && "Reset your password"}
         </h2>
+
+        {!supabaseConfigured && mode !== "forgot" && (
+          <div className="veris-auth-notice veris-error" role="alert">
+            <AlertCircle size={16} />
+            <span>
+              Sign-in is not available yet — the Supabase environment variables haven&apos;t been
+              added to Vercel. Add <strong>VITE_SUPABASE_URL</strong> and{" "}
+              <strong>VITE_SUPABASE_ANON_KEY</strong> in your Vercel project settings and
+              redeploy.
+            </span>
+          </div>
+        )}
 
         {notice && (
           <div className={`veris-auth-notice veris-${notice.type}`} role="status">
