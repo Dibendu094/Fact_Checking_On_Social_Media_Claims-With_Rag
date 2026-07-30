@@ -3,6 +3,12 @@
 > **Verify. Reason. Trust.**  
 > A production-grade RAG (Retrieval-Augmented Generation) application that fact-checks social media claims against a knowledge base of 484,848 verified fact-checks using semantic search, an LLM, and live web evidence.
 
+### 🌐 Live Demo
+
+**[https://fact-checker-delta-two.vercel.app/](https://fact-checker-delta-two.vercel.app/)**
+
+Paste any claim you've seen on social media and get an instant AI-powered verdict — **TRUE**, **FALSE**, **MISLEADING**, or **UNVERIFIED** — backed by evidence retrieved from 484,848 indexed fact-checks and live web sources. No sign-up required to try it; create a free account to save your check history and access your personal dashboard.
+
 ---
 
 ## Table of Contents
