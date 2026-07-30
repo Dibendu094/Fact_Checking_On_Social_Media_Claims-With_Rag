@@ -1,21 +1,19 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { supabase, authErrorMessage } from "../services/supabase";
+import { supabase, supabaseConfigured, authErrorMessage } from "../services/supabase";
 import { resetPassword as resetPasswordApi } from "../services/api";
 
 const AuthContext = createContext(null);
 
-/**
- * Session state backed by Supabase Auth.
- *
- * We do not store tokens ourselves: supabase-js persists the session and
- * refreshes it, and onAuthStateChange keeps React in sync (including across
- * tabs and after the email-confirmation redirect).
- */
 export function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabaseConfigured) {
+      setLoading(false);
+      return;
+    }
+
     let active = true;
 
     supabase.auth.getSession().then(({ data }) => {
@@ -40,8 +38,6 @@ export function AuthProvider({ children }) {
       ? {
           id: supaUser.id,
           email: supaUser.email,
-          // username comes from user_metadata, set at signup; fall back to the
-          // local-part of the email so the avatar/initial always renders.
           username:
             supaUser.user_metadata?.username ||
             (supaUser.email ? supaUser.email.split("@")[0] : "User"),
@@ -52,27 +48,22 @@ export function AuthProvider({ children }) {
       user,
       session,
       loading,
+      supabaseConfigured,
 
       signUp: async ({ username, email, password }) => {
+        if (!supabaseConfigured) throw new Error("Auth is not configured.");
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
           options: { data: { username: username.trim() } },
         });
         if (error) throw new Error(authErrorMessage(error));
-        // Accounts are usable immediately (a DB trigger auto-confirms the
-        // email on insert — see project notes). Whether this call itself
-        // also returns a live session is inconsistent, so it's forced off:
-        // the caller always sends the user to the sign-in form to log in
-        // manually, matching a normal login flow rather than a surprise
-        // auto-login.
-        if (data.session) {
-          await supabase.auth.signOut();
-        }
+        if (data.session) await supabase.auth.signOut();
         return { user: data.user };
       },
 
       signIn: async ({ email, password }) => {
+        if (!supabaseConfigured) throw new Error("Auth is not configured.");
         const { error } = await supabase.auth.signInWithPassword({
           email: email.trim(),
           password,
@@ -85,6 +76,7 @@ export function AuthProvider({ children }) {
       },
 
       signOut: async () => {
+        if (!supabaseConfigured) return;
         await supabase.auth.signOut();
       },
     };

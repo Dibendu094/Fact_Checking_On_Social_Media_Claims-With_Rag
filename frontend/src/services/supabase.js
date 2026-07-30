@@ -3,27 +3,24 @@ import { createClient } from "@supabase/supabase-js";
 const url = import.meta.env.VITE_SUPABASE_URL;
 const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!url || !anonKey) {
-  // Fail loudly at boot rather than with a confusing null-ref later.
-  console.error(
-    "Supabase is not configured. Copy frontend/.env.example to frontend/.env " +
-      "and set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY."
+export const supabaseConfigured = Boolean(url && anonKey);
+
+if (!supabaseConfigured) {
+  console.warn(
+    "Supabase env vars missing (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY). " +
+      "Auth features will be disabled until they are set in Vercel and the app is redeployed."
   );
 }
 
-/**
- * Supabase handles auth and session persistence itself (localStorage +
- * auto-refresh). We deliberately do not hand-roll token storage — the client
- * attaches the access token to every PostgREST call, and row-level security
- * on `public.checks` is what guarantees a user only ever sees their own rows.
- */
-export const supabase = createClient(url || "", anonKey || "", {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-  },
-});
+export const supabase = supabaseConfigured
+  ? createClient(url, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+      },
+    })
+  : null;
 
 /** Turn a Supabase error into one clear sentence for the auth-notice UI. */
 export const authErrorMessage = (error) => {
