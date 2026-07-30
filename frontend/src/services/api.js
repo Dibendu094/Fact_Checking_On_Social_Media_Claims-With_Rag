@@ -22,12 +22,6 @@ export const factCheck = async (claim) => {
   return data;
 };
 
-/** GET aggregate database statistics for the dashboard. */
-export const getStats = async () => {
-  const { data } = await api.get("/api/stats");
-  return data;
-};
-
 /** GET backend health. */
 export const getHealth = async () => {
   const { data } = await api.get("/health");
