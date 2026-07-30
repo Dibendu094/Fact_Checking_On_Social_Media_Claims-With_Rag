@@ -294,11 +294,22 @@ curl -X POST http://localhost:8000/api/fact-check \
 
 ## Screenshots
 
-| Home | Fact Check | Result |
-|------|-----------|--------|
-| ![Home](docs/home.png) | ![Check](docs/factcheck.png) | ![Result](docs/result.png) |
+### Home
+![Home page](docs/home.png)
 
-> Add screenshots to a `docs/` folder and update the paths above.
+### Fact Check
+![Fact Check page](docs/factcheck.png)
+
+### Dashboard
+![Dashboard page](docs/dashboard.png)
+
+### About
+![About page](docs/about.png)
+
+### Sign In / Sign Up / Forgot Password
+| Sign In | Sign Up | Forgot Password |
+|---------|---------|-----------------|
+| ![Sign in](docs/auth_signin.png) | ![Sign up](docs/auth_signup.png) | ![Forgot password](docs/auth_forgot.png) |
 
 ---
 
