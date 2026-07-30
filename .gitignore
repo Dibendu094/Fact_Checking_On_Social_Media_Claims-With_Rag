@@ -1,0 +1,32 @@
+# --- Python / backend ---
+backend/.env
+backend/__pycache__/
+**/__pycache__/
+*.pyc
+backend/data/raw/
+backend/data/processed/
+backend/logs/
+backend/data/processed/.embed_checkpoint.json
+
+# --- Node / frontend ---
+frontend/node_modules/
+frontend/dist/
+frontend/.env
+
+# --- Dataset archives and large data files (do not commit) ---
+*.zip
+*.zip1
+*.csv
+synhetic_files/
+audit_*.json
+
+# --- Claude Code session files ---
+.claude/
+
+# --- Misc ---
+.DS_Store
+*.log
+.venv/
+venv/
+.idea/
+.vscode/

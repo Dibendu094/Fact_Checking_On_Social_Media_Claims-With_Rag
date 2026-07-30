@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * All page styling lives in styles/veris.css, scoped under the `.veris`
+ * wrapper. This file only needs to guarantee a safe, static background
+ * before that wrapper mounts (or in any edge case where it doesn't fully
+ * cover the viewport, e.g. mobile overscroll) — fixed to Veris's cream, not
+ * a variable, so it can never flip to black under a `prefers-color-scheme:
+ * dark` OS setting the way an earlier design iteration's tokens did.
+ */
+html, body {
+  margin: 0;
+  background: #fbf7ef;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}

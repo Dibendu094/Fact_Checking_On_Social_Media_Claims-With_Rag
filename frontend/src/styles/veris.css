@@ -1,0 +1,490 @@
+/* ============================================================
+   Veris design system.
+   Tokens live here as CSS custom properties (same convention the
+   rest of the app uses). Imported once from main.jsx.
+
+   Every component-level class is prefixed `veris-` so it can never
+   collide with global CSS, a component library, or Tailwind utility
+   classes — the root `.veris` wrapper class is the one exception,
+   kept as the app's namespace/scope selector.
+
+   The `.veris :where(button)` reset intentionally uses :where() to
+   carry zero specificity, so any single-class button override
+   (`.veris-btn-primary`, `.veris-auth-submit`, ...) reliably wins
+   without needing !important.
+
+   Extended beyond the original two-verdict mock: the RAG backend
+   returns TRUE / FALSE / MISLEADING / UNVERIFIED, so amber and
+   slate verdict colours were added to the palette.
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+.veris {
+  --cream: #FBF7EF;
+  --cream-deep: #F2ECDE;
+  --card: #F6F1E6;
+  --ink: #1B1B2E;
+  --ink-soft: #47475C;
+  --periwinkle: #7B7FC4;
+  --periwinkle-soft: #E9E9F7;
+  --slate: #75758A;
+  --sage: #3F6B4F;
+  --sage-soft: #E2ECE3;
+  --wine: #7C3B46;
+  --wine-soft: #F2E2E3;
+  /* Added for the four-verdict vocabulary */
+  --amber: #8A5A16;
+  --amber-soft: #F7EBD3;
+  --neutral: #55556B;
+  --neutral-soft: #E7E6EC;
+  --line: #E1D6C2;
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', 'Courier New', monospace;
+
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  min-height: 100vh;
+  width: 100%;
+}
+
+.veris * { box-sizing: border-box; }
+
+/* Zero-specificity reset (see file header) — button/textarea/input/link
+   overrides below only need a single class to win, no !important. */
+.veris :where(button) {
+  font-family: var(--font-sans);
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+.veris :where(button):focus-visible,
+.veris :where(textarea):focus-visible,
+.veris :where(input):focus-visible,
+.veris :where(a):focus-visible {
+  outline: 2px solid var(--periwinkle);
+  outline-offset: 3px;
+}
+
+/* ---------- Navbar ---------- */
+.veris-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 48px;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+  gap: 14px;
+  position: relative;
+  z-index: 30;
+}
+.veris-nav-left { display: flex; align-items: center; gap: 12px; }
+.veris-logo-mark {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.veris-logo-text { display: flex; flex-direction: column; line-height: 1.15; }
+.veris-logo-name { font-family: var(--font-display); font-size: 16px; font-weight: 600; letter-spacing: 0.02em; }
+.veris-logo-tag { font-size: 10.5px; color: var(--slate); letter-spacing: 0.03em; }
+
+.veris-nav-center { display: flex; align-items: center; gap: 4px; }
+.veris-nav-link {
+  font-size: 14px;
+  padding: 8px 16px;
+  color: var(--slate);
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+  text-decoration: none;
+}
+.veris-nav-link:hover { color: var(--ink); }
+.veris-nav-link.veris-active { color: var(--ink); border-bottom-color: var(--periwinkle); font-weight: 500; }
+
+.veris-nav-right { display: flex; align-items: center; gap: 10px; }
+.veris-btn-login {
+  font-size: 14px; color: var(--ink-soft);
+  display: flex; align-items: center; gap: 6px;
+  padding: 9px 14px;
+}
+.veris-btn-login:hover { color: var(--ink); }
+.veris-btn-signup {
+  font-size: 14px; font-weight: 500;
+  background: var(--ink); color: var(--cream);
+  padding: 10px 20px; border-radius: 999px;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+.veris-btn-signup:hover { background: var(--periwinkle); transform: translateY(-1px); }
+
+/* ---------- user menu ---------- */
+.veris-user-menu-wrap { position: relative; }
+/* Avatar-only trigger: no chip background/border, no name — just the circle,
+   with a soft ring on hover/focus so it still reads as clickable. */
+.veris-user-chip {
+  display: flex; align-items: center; justify-content: center;
+  padding: 0; border-radius: 50%;
+  border: 2px solid transparent;
+  background: none;
+  transition: border-color 0.2s ease;
+}
+.veris-user-chip:hover { border-color: var(--periwinkle-soft); }
+.veris-avatar {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: var(--periwinkle); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; font-family: var(--font-display);
+  flex-shrink: 0;
+}
+.veris-user-chip-name { font-size: 13.5px; color: var(--ink-soft); font-weight: 500; }
+.veris-menu-overlay { position: fixed; inset: 0; z-index: 40; }
+.veris-user-dropdown {
+  position: absolute; right: 0; top: calc(100% + 10px); width: 230px;
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 20px; z-index: 50; box-shadow: 0 14px 34px rgba(27,27,46,0.14);
+  animation: veris-cardIn 0.18s ease;
+}
+.veris-dropdown-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: var(--periwinkle); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-display); font-size: 18px; margin-bottom: 10px;
+}
+.veris-dropdown-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+.veris-dropdown-email { font-size: 12.5px; color: var(--slate); margin-bottom: 14px; word-break: break-all; }
+.veris-dropdown-logout {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 9px 12px; border-radius: 10px; font-size: 13.5px;
+  color: var(--wine); background: var(--wine-soft); justify-content: center; font-weight: 500;
+  transition: opacity 0.15s ease;
+}
+.veris-dropdown-logout:hover { opacity: 0.82; }
+
+/* ---------- Shared section scaffolding ---------- */
+.veris-section { padding: 64px 48px 96px; max-width: 1180px; margin: 0 auto; }
+.veris-eyebrow {
+  font-family: var(--font-display); font-style: italic; font-weight: 400;
+  color: var(--periwinkle); font-size: 20px; margin: 0 0 6px 2px;
+}
+.veris-section-title {
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(34px, 4.4vw, 52px);
+  line-height: 1.05; margin: 0 0 16px; letter-spacing: -0.01em;
+}
+.veris-section-title em { color: var(--periwinkle); font-style: italic; }
+.veris-section-sub { color: var(--slate); font-size: 16px; max-width: 560px; line-height: 1.6; margin: 0 0 40px; }
+
+/* ---------- Home / hero ---------- */
+.veris-hero { padding-top: 88px; }
+.veris-hero-eyebrow {
+  font-family: var(--font-display); font-style: italic; color: var(--periwinkle);
+  font-size: 22px; margin-left: 4px;
+  opacity: 0; animation: veris-fadeUp 0.7s ease forwards;
+}
+.veris-hero-title {
+  font-family: var(--font-display); font-weight: 500;
+  font-size: clamp(46px, 8vw, 104px);
+  line-height: 0.98; letter-spacing: -0.015em;
+  margin: 4px 0 0;
+}
+.veris-hero-title .veris-line {
+  display: block; opacity: 0; transform: translateY(28px);
+  animation: veris-fadeUp 0.75s ease forwards;
+}
+.veris-hero-title .veris-line:nth-child(1) { animation-delay: 0.08s; }
+.veris-hero-title .veris-line:nth-child(2) { animation-delay: 0.24s; }
+.veris-hero-title .veris-line:nth-child(3) { animation-delay: 0.40s; position: relative; }
+
+.veris-hang-tag {
+  position: absolute;
+  top: 14%;
+  margin-left: 22px;
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--ink); color: var(--cream);
+  font-family: var(--font-mono); font-size: 11.5px;
+  padding: 9px 14px; border-radius: 999px;
+  transform: rotate(-4deg);
+  opacity: 0; animation: veris-popIn 0.5s ease forwards; animation-delay: 0.85s;
+  white-space: nowrap;
+}
+.veris-hang-tag::before {
+  content: ''; position: absolute; left: 22px; top: -16px;
+  width: 1px; height: 16px; background: var(--ink-soft);
+}
+
+.veris-hero-bottom {
+  display: flex; justify-content: flex-end; margin-top: 46px; margin-bottom: 20px;
+  opacity: 0; animation: veris-fadeUp 0.7s ease forwards; animation-delay: 1.05s;
+}
+.veris-hero-sub-block { max-width: 380px; text-align: left; }
+.veris-hero-sub-block p { color: var(--slate); font-size: 15px; line-height: 1.65; margin: 0 0 20px; }
+.veris-btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--ink); color: var(--cream);
+  font-size: 14.5px; font-weight: 500;
+  padding: 13px 24px; border-radius: 999px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.veris-btn-primary:hover { background: var(--periwinkle); transform: translateY(-1px); }
+
+.veris-btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--card); color: var(--ink-soft);
+  font-size: 14.5px; font-weight: 500;
+  padding: 12px 22px; border-radius: 999px;
+  border: 1px solid var(--line);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+.veris-btn-secondary:hover { border-color: var(--periwinkle); color: var(--periwinkle); transform: translateY(-1px); }
+
+@keyframes veris-fadeUp { to { opacity: 1; transform: translateY(0); } }
+@keyframes veris-popIn { to { opacity: 1; transform: rotate(-4deg) scale(1); } }
+@keyframes veris-cardIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ---------- Fact check / claim box ---------- */
+.veris-claim-box {
+  background: var(--card); border: 1px solid var(--line); border-radius: 20px;
+  padding: 28px; margin-bottom: 8px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.veris-claim-box:focus-within { border-color: var(--periwinkle); box-shadow: 0 0 0 4px var(--periwinkle-soft); }
+.veris-claim-box-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.veris-claim-label { font-size: 12px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--slate); }
+.veris-claim-box textarea {
+  width: 100%; min-height: 140px; resize: vertical;
+  border: none; background: transparent; outline: none;
+  font-family: var(--font-sans); font-size: 16px; color: var(--ink);
+  line-height: 1.6;
+}
+.veris-claim-box textarea::placeholder { color: #A8A0A0; }
+.veris-progress-track { height: 4px; border-radius: 999px; background: var(--line); margin-top: 14px; overflow: hidden; }
+.veris-progress-fill { height: 100%; border-radius: 999px; transition: width 0.25s ease, background 0.25s ease; }
+.veris-claim-meta {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line);
+  flex-wrap: wrap; gap: 12px;
+}
+.veris-char-count { font-family: var(--font-mono); font-size: 12.5px; color: var(--slate); }
+.veris-char-count.veris-warn { color: var(--wine); }
+.veris-char-count.veris-ready { color: var(--sage); }
+.veris-btn-analyze {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--periwinkle); color: #fff;
+  font-size: 14.5px; font-weight: 600;
+  padding: 12px 22px; border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(123,127,196,0.35);
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+.veris-btn-analyze:disabled {
+  background: var(--cream-deep); color: var(--slate);
+  border: 1px solid var(--line); box-shadow: none; cursor: not-allowed;
+}
+.veris-btn-analyze:not(:disabled):hover {
+  background: var(--ink); transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(27,27,46,0.25);
+}
+/* Looks disabled but stays clickable — clicking opens the limit modal
+   instead of submitting (see FactCheckForm). Not the same as :disabled,
+   which would swallow the click. */
+.veris-btn-analyze.veris-limit-reached {
+  background: var(--cream-deep); color: var(--slate);
+  border: 1px solid var(--line); box-shadow: none; cursor: pointer;
+}
+.veris-limit-note {
+  font-family: var(--font-mono); font-size: 11.5px; color: var(--slate);
+  letter-spacing: 0.02em;
+}
+.veris-limit-note.veris-limit-low { color: var(--wine); }
+.veris-spin { animation: veris-spin 0.9s linear infinite; }
+@keyframes veris-spin { to { transform: rotate(360deg); } }
+
+.veris-examples-row { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+.veris-examples-label { font-size: 12px; color: var(--slate); margin-right: 2px; }
+.veris-example-chip {
+  font-size: 12px; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--line);
+  color: var(--ink-soft); background: var(--cream); transition: all 0.15s ease; max-width: 260px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.veris-example-chip:hover { border-color: var(--periwinkle); color: var(--periwinkle); }
+
+.veris-result-card {
+  margin-top: 32px; border: 1px solid var(--line); border-radius: 20px;
+  background: var(--card); padding: 36px;
+  display: grid; grid-template-columns: auto auto 1fr; gap: 36px; align-items: start;
+  animation: veris-cardIn 0.5s ease forwards;
+}
+
+.veris-stamp {
+  width: 108px; height: 108px; border-radius: 50%;
+  border: 3px solid currentColor;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; font-family: var(--font-display); font-weight: 600; font-size: 15px;
+  letter-spacing: 0.04em; flex-shrink: 0;
+  transform: scale(1.9) rotate(0deg); opacity: 0;
+  animation: veris-stampIn 0.55s cubic-bezier(.34,1.56,.64,1) forwards;
+  animation-delay: 0.1s;
+  text-align: center;
+}
+.veris-stamp span { padding: 0 6px; line-height: 1.1; }
+.veris-stamp.veris-true { color: var(--sage); }
+.veris-stamp.veris-false { color: var(--wine); }
+.veris-stamp.veris-misleading { color: var(--amber); }
+.veris-stamp.veris-unverified { color: var(--neutral); }
+/* Longer words need to fit inside the same 108px disc. */
+.veris-stamp.veris-misleading span, .veris-stamp.veris-unverified span { font-size: 11.5px; letter-spacing: 0.02em; }
+@keyframes veris-stampIn { to { transform: scale(1) rotate(-8deg); opacity: 1; } }
+
+.veris-confidence-ring { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; }
+.veris-confidence-ring svg { transform: rotate(-90deg); }
+.veris-ring-bg { fill: none; stroke: var(--line); stroke-width: 8; }
+.veris-ring-fg { fill: none; stroke: var(--periwinkle); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 0.9s ease; }
+.veris-ring-value { font-family: var(--font-mono); font-size: 20px; margin-top: -68px; }
+.veris-ring-label { font-size: 11.5px; color: var(--slate); margin-top: 44px; }
+
+.veris-explanation h4 { margin: 0 0 8px; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--slate); }
+.veris-explanation p { margin: 0 0 14px; font-size: 15px; line-height: 1.65; color: var(--ink-soft); }
+.veris-explanation ul { margin: 0; padding-left: 18px; }
+.veris-explanation li { font-size: 14px; color: var(--slate); line-height: 1.8; }
+
+/* Real, linkable published fact-checks returned by the backend. */
+.veris-source-list { margin: 16px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.veris-source-item a {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 13.5px; color: var(--periwinkle); text-decoration: none;
+}
+.veris-source-item a:hover { text-decoration: underline; }
+.veris-source-pub { font-family: var(--font-mono); font-size: 11.5px; color: var(--slate); }
+
+.veris-tier-note {
+  font-family: var(--font-mono); font-size: 11px; color: var(--slate);
+  letter-spacing: 0.03em; margin-top: 16px; display: block;
+}
+
+/* ---------- Dashboard ---------- */
+.veris-stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 40px; }
+.veris-stat-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 22px 20px;
+}
+.veris-stat-num { display: block; font-family: var(--font-mono); font-size: 30px; color: var(--ink); }
+.veris-stat-label { font-size: 12.5px; color: var(--slate); margin-top: 4px; display: block; }
+
+.veris-history-list { display: flex; flex-direction: column; gap: 10px; }
+.veris-history-row {
+  display: grid; grid-template-columns: 1fr auto auto auto auto; gap: 18px; align-items: center;
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px 20px;
+}
+.veris-history-claim { font-size: 14.5px; color: var(--ink-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.veris-history-badge {
+  font-family: var(--font-mono); font-size: 11.5px; font-weight: 500; letter-spacing: 0.03em;
+  padding: 5px 12px; border-radius: 999px; text-transform: uppercase; white-space: nowrap;
+}
+.veris-history-badge.veris-true { background: var(--sage-soft); color: var(--sage); }
+.veris-history-badge.veris-false { background: var(--wine-soft); color: var(--wine); }
+.veris-history-badge.veris-misleading { background: var(--amber-soft); color: var(--amber); }
+.veris-history-badge.veris-unverified { background: var(--neutral-soft); color: var(--neutral); }
+.veris-history-confidence { font-family: var(--font-mono); font-size: 13px; color: var(--slate); white-space: nowrap; }
+.veris-history-date { font-size: 12.5px; color: var(--slate); white-space: nowrap; }
+.veris-history-actions { display: flex; align-items: center; gap: 4px; }
+.veris-view-btn { color: var(--slate); padding: 6px; border-radius: 8px; transition: color 0.2s ease, background 0.2s ease; }
+.veris-view-btn:hover { color: var(--periwinkle); background: var(--periwinkle-soft); }
+.veris-delete-btn { color: var(--slate); padding: 6px; border-radius: 8px; transition: color 0.2s ease, background 0.2s ease; }
+.veris-delete-btn:hover { color: var(--wine); background: var(--wine-soft); }
+.veris-delete-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.veris-empty-state {
+  text-align: center; padding: 56px 20px; color: var(--slate);
+  border: 1px dashed var(--line); border-radius: 16px; font-size: 14.5px;
+}
+
+/* ---------- Evidence modal ---------- */
+.veris-modal-overlay {
+  position: fixed; inset: 0; background: rgba(27,27,46,0.45); backdrop-filter: blur(2px);
+  display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+  animation: veris-fadeIn 0.15s ease;
+}
+.veris-modal-box {
+  background: var(--cream); border: 1px solid var(--line); border-radius: 20px;
+  padding: 34px; max-width: 460px; width: 100%; max-height: 82vh; overflow-y: auto;
+  position: relative; animation: veris-cardIn 0.2s ease;
+}
+.veris-modal-close { position: absolute; top: 18px; right: 18px; color: var(--slate); padding: 6px; border-radius: 8px; }
+.veris-modal-close:hover { color: var(--ink); background: var(--cream-deep); }
+.veris-modal-claim-text {
+  font-size: 15px; color: var(--ink-soft); line-height: 1.6; margin: 6px 0 20px;
+  padding-bottom: 20px; border-bottom: 1px solid var(--line); font-style: italic;
+}
+.veris-modal-verdict-row { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+.veris-modal-confidence { font-family: var(--font-mono); font-size: 13px; color: var(--slate); }
+@keyframes veris-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* ---------- Auth ---------- */
+.veris-auth-wrap { display: flex; justify-content: center; padding-top: 12px; }
+.veris-auth-card { width: 100%; max-width: 440px; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 44px 40px; }
+.veris-auth-switch { display: flex; background: var(--cream-deep); border-radius: 999px; padding: 4px; margin-bottom: 28px; }
+.veris-auth-switch button { flex: 1; padding: 9px 0; font-size: 13.5px; border-radius: 999px; color: var(--slate); font-weight: 500; transition: all 0.2s ease; }
+.veris-auth-switch button.veris-active { background: var(--ink); color: var(--cream); }
+.veris-back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--slate); margin-bottom: 24px; }
+.veris-back-link:hover { color: var(--ink); }
+.veris-auth-eyebrow { font-size: 18px; margin-bottom: 4px; }
+.veris-auth-title { font-size: 30px; margin-bottom: 22px; }
+
+.veris-auth-notice { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; padding: 12px 14px; border-radius: 12px; margin-bottom: 20px; line-height: 1.5; }
+.veris-auth-notice.veris-error { background: var(--wine-soft); color: var(--wine); }
+.veris-auth-notice.veris-success { background: var(--sage-soft); color: var(--sage); }
+
+.veris-auth-form { display: flex; flex-direction: column; gap: 18px; }
+.veris-field { display: flex; flex-direction: column; gap: 6px; }
+.veris-field label { font-size: 12.5px; color: var(--ink-soft); font-weight: 500; }
+.veris-input-wrap { position: relative; display: flex; align-items: center; }
+.veris-field input {
+  width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px;
+  font-size: 14.5px; background: var(--cream); color: var(--ink); transition: border-color 0.2s ease;
+}
+.veris-field input:focus { outline: none; border-color: var(--periwinkle); }
+.veris-eye-btn { position: absolute; right: 8px; color: var(--slate); padding: 7px; border-radius: 8px; display: flex; }
+.veris-eye-btn:hover { color: var(--ink); background: var(--cream-deep); }
+
+.veris-pw-rules { display: flex; flex-direction: column; gap: 6px; margin-top: -6px; }
+.veris-pw-rule { display: flex; align-items: center; gap: 7px; font-size: 12.5px; color: var(--slate); }
+.veris-pw-rule.veris-ok { color: var(--sage); }
+.veris-pw-rule .veris-dot {
+  width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid currentColor;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+
+.veris-forgot-link { font-size: 12.5px; color: var(--periwinkle); align-self: flex-end; margin-top: 2px; }
+.veris-forgot-link:hover { text-decoration: underline; }
+
+.veris-auth-submit {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  background: var(--ink); color: var(--cream); font-size: 14.5px; font-weight: 500;
+  padding: 13px 22px; border-radius: 999px; margin-top: 4px;
+  transition: background 0.2s ease, transform 0.15s ease;
+}
+.veris-auth-submit:hover { background: var(--periwinkle); transform: translateY(-1px); }
+.veris-auth-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+.veris-auth-footer-link { text-align: center; font-size: 13.5px; color: var(--slate); margin-top: 24px; }
+.veris-auth-footer-link button { color: var(--periwinkle); font-weight: 500; }
+.veris-auth-footer-link button:hover { text-decoration: underline; }
+
+@media (max-width: 860px) {
+  .veris-nav { padding: 18px 22px; }
+  .veris-nav-center { order: 3; width: 100%; justify-content: center; }
+  .veris-section { padding: 44px 22px 72px; }
+  .veris-result-card { grid-template-columns: 1fr; justify-items: start; }
+  .veris-hero-bottom { justify-content: flex-start; }
+  .veris-stats-row { grid-template-columns: repeat(2, 1fr); }
+  .veris-history-row { grid-template-columns: 1fr; justify-items: start; gap: 6px; }
+  .veris-auth-card { padding: 34px 26px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veris * { animation: none !important; transition: none !important; opacity: 1 !important; transform: none !important; }
+}

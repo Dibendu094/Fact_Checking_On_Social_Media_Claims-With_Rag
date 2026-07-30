@@ -1,0 +1,21 @@
+# --- data pipeline (data_consolidation.py) ---
+pandas==2.2.2
+numpy==1.26.4
+tqdm==4.66.4
+colorama==0.4.6
+openpyxl==3.1.4     # for Excel support
+pydantic==2.7.4
+python-dateutil==2.9.0
+
+# --- embeddings + vector store (generate_embeddings.py) ---
+sentence-transformers==3.0.1   # local multilingual embeddings (intfloat/multilingual-e5-large, ~2.3GB)
+pinecone>=5.0.0                # Pinecone vector DB client (the old `pinecone-client` package is deprecated and refuses to import)
+python-dotenv==1.0.1           # load backend/.env
+torch>=2.2.0                   # pulled in by sentence-transformers; install a CUDA build for GPU acceleration
+
+# --- API server (main.py) ---
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+python-multipart==0.0.9
+httpx==0.27.0
+groq>=0.11.0                    # Groq LLM (llama-3.3-70b-versatile) — active provider

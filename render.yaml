@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: fact-checker-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PINECONE_API_KEY
+        sync: false
+      - key: PINECONE_INDEX_NAME
+        value: fact-check-claims
+      - key: PINECONE_CLOUD
+        value: aws
+      - key: PINECONE_REGION
+        value: us-east-1
+      - key: PINECONE_NAMESPACE
+        value: claims
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: llama-3.3-70b-versatile
+      - key: EMBEDDING_MODEL
+        value: intfloat/multilingual-e5-large
+      - key: EMBEDDING_DIMENSION
+        value: "1024"
+      - key: TOP_K_RESULTS
+        value: "5"
+      - key: SIMILARITY_THRESHOLD
+        value: "0.82"
+      - key: HIGH_CONF_THRESHOLD
+        value: "0.88"
+      - key: MEDIUM_CONF_THRESHOLD
+        value: "0.86"
+      - key: ENABLE_WEB_SEARCH
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO
+      - key: APP_VERSION
+        value: 2.0.0
+      - key: CORS_ORIGINS
+        sync: false   # set to your Vercel URL, e.g. https://your-app.vercel.app
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
