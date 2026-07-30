@@ -1,16 +1,17 @@
-# API server — installed on Render
-# Pipeline scripts (data_consolidation.py, generate_embeddings.py) use
-# requirements-pipeline.txt instead, which extends this file.
+# API server — installed on Render.
+# Uses HuggingFace Inference API for embeddings (HF_API_TOKEN env var),
+# so torch and sentence-transformers are NOT needed here.
+# For local dev without HF_API_TOKEN, install requirements-pipeline.txt
+# which includes sentence-transformers + torch.
 
 # --- Core ---
 pydantic==2.7.4
 python-dotenv==1.0.1
 python-dateutil==2.9.0
+numpy>=1.24.0
 
-# --- Embeddings + vector store ---
-sentence-transformers==3.0.1
+# --- Vector store ---
 pinecone>=5.0.0
-torch>=2.2.0
 
 # --- API server ---
 fastapi==0.111.0

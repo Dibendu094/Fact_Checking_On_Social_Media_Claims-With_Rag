@@ -90,6 +90,9 @@ class Settings:
         self.high_conf_threshold: float = _get_float("HIGH_CONF_THRESHOLD", 0.88)
         self.medium_conf_threshold: float = _get_float("MEDIUM_CONF_THRESHOLD", 0.86)
 
+        # --- HuggingFace Inference API (remote embeddings — no local model load) ---
+        self.hf_api_token: str = _get("HF_API_TOKEN")
+
         # --- Supabase (admin password reset) ---
         self.supabase_url: str = _get("SUPABASE_URL")
         self.supabase_service_role_key: str = _get("SUPABASE_SERVICE_ROLE_KEY")
